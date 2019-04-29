@@ -2,7 +2,7 @@
 <html>
   <head>
     <title>@yield('title','Weibo App') - Laravel 练习生</title>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    <link rel="stylesheet" href="{{  mix('css/app.css')  }}">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
