@@ -12,12 +12,18 @@ class UsersController extends Controller
     {
         /*只有通过登录验证的，才可以访问以下方法(针对已登录用户)*/
         $this->middleware('auth',[
-           'except'=>['show','create','store']
+           'except'=>['show','create','store','index']
         ]);
-	/*只允许未登录用户访问的动作用guest属性*/
-	$this->middleware('guest',[
-		'only'=>['create']
-	]);
+        /*只允许未登录用户访问的动作用guest属性*/
+        $this->middleware('guest',[
+            'only'=>['create']
+        ]);
+    }
+
+    public function index()
+    {
+        $users=User::paginate(10);
+        return view('users.index',compact('users'));
     }
 
     public function create()
@@ -70,6 +76,12 @@ class UsersController extends Controller
         $user->update($data);
         session()->flash('success','个人资料更新成功！');
         return redirect()->route('users.show',$user);
+    }
+    public function destroy(User $user)
+    {
+	$user->delete();
+	session()->flash('success','成功删除用户!');
+	return back();
     }
     //
 }
