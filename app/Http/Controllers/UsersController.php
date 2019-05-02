@@ -8,7 +8,19 @@ use Auth;
 
 class UsersController extends Controller
 {
-	public function create()
+    public function __construct()
+    {
+        /*只有通过登录验证的，才可以访问以下方法(针对已登录用户)*/
+        $this->middleware('auth',[
+           'except'=>['show','create','store']
+        ]);
+	/*只允许未登录用户访问的动作用guest属性*/
+	$this->middleware('guest',[
+		'only'=>['create']
+	]);
+    }
+
+    public function create()
 	{
 		return view('users.create');
 	}
@@ -39,11 +51,13 @@ class UsersController extends Controller
 
     public function edit(User $user)
     {
+	$this->authorize('update',$user);    
         return view('users.edit',compact('user'));
     }
 
     public function update(User $user,Request $request)
     {
+	$this->authorize('update',$user);
         $this->validate($request,[
             'name'=>'required|max:50',
             'password'=>'required|confirmed|min:6'

@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 use Auth;
 class SessionsController extends Controller
 {
+    public function __construct()
+    {
+	    $this->middleware('guest',[
+		    'only'=>['create']
+	    ]);
+    }
     //
     public function create()
     {
@@ -21,7 +27,8 @@ class SessionsController extends Controller
 
 	    if(Auth::attempt($credentials,$request->has('remember'))){
 		    session()->flash('success','欢迎回来!');
-		    return redirect()->route('users.show',[Auth::user()]);
+		    $fallback=route('users.show',Auth::user());
+		    return redirect()->intended($fallback);
 		    //登录成功后的相关操作
 	    }else{
 		    session()->flash('danger','密码或邮箱错误');
